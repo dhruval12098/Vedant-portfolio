@@ -7,11 +7,22 @@
     align-items: center;
     gap: 2rem;
     height: var(--header-h);
-    margin: 0 var(--gutter);
-    border-bottom: 1px solid var(--ink);
+    /* Full-bleed white bar (nothing shows past its ends, even over a photo), its contents and
+       its rule inset to the page gutter. */
+    padding: 0 max(var(--gutter), env(safe-area-inset-right)) 0 max(var(--gutter), env(safe-area-inset-left));
     background: var(--bg);
     font-size: clamp(0.8rem, 0.95vw, 1rem);
     text-transform: uppercase;
+  }
+
+  .header::after {
+    content: "";
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 0;
+    height: 1px;
+    background: var(--ink);
   }
 
   .header a {
