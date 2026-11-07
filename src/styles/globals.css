@@ -1,0 +1,89 @@
+@layer reset, base, components;
+@import "./tokens.css";
+
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+  }
+}
+
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-body), ui-monospace, monospace;
+    /* Monoid is wide: a smaller base keeps a terminal's measure. */
+    font-size: clamp(0.8rem, 0.92vw, 0.95rem);
+    line-height: 1.6;
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Dotted paper behind everything (sections stay transparent so it shows through). */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image: radial-gradient(circle, var(--dot) 1.1px, transparent 1.6px);
+    background-size: var(--dot-x) var(--dot-y);
+    background-position: calc(var(--dot-x) / -2 + 32px) calc(var(--dot-y) / -2 + 20px);
+  }
+
+  /* Mobile menu squeeze: the page presses back into a rounded card (components/mobile-menu). */
+  html[data-menu] {
+    background: var(--ink);
+  }
+
+  html[data-menu] [data-page] {
+    background: var(--bg);
+    transform-origin: 50% var(--menu-origin-y, 50svh);
+    clip-path: inset(var(--menu-clip-top, 0px) 0 var(--menu-clip-bottom, 0px) round 0);
+    transition:
+      scale 820ms var(--ease-out),
+      clip-path 820ms var(--ease-out);
+  }
+
+  html[data-menu="open"] [data-page] {
+    scale: 0.92;
+    clip-path: inset(var(--menu-clip-top, 0px) 0 var(--menu-clip-bottom, 0px) round 1.75rem);
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  /* Lenis drives scrolling; the browser's own smoothing would fight it. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

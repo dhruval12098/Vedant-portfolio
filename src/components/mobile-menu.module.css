@@ -1,0 +1,162 @@
+/*
+ * Half-sheet on the native popover (from the Drimindesign site). The page squeeze lives in
+ * globals.css (html[data-menu]); the frost is this ::backdrop.
+ */
+@layer components {
+  .trigger {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 1px solid var(--ink);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--ink);
+    font: inherit;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .sheet {
+    position: fixed;
+    inset: 0 0 auto;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin: 0;
+    padding: calc(var(--header-h) + 0.5rem) var(--gutter) 0;
+    border: 0;
+    overflow: visible;
+    background: transparent;
+    transition:
+      overlay 420ms allow-discrete,
+      display 420ms allow-discrete;
+  }
+
+  .sheet::backdrop {
+    background: rgb(255 255 255 / 0);
+    backdrop-filter: blur(0);
+    transition:
+      background-color 420ms var(--ease-out),
+      backdrop-filter 420ms var(--ease-out),
+      overlay 420ms allow-discrete,
+      display 420ms allow-discrete;
+  }
+
+  .sheet:popover-open::backdrop {
+    background: rgb(255 255 255 / 0.2);
+    backdrop-filter: blur(6px);
+  }
+
+  @starting-style {
+    .sheet:popover-open::backdrop {
+      background: rgb(255 255 255 / 0);
+      backdrop-filter: blur(0);
+    }
+  }
+
+  /* It unfolds from the Menu button, top right, like a sheet pulled down. */
+  .panel {
+    max-height: calc(100svh - var(--header-h) - 1rem);
+    padding: 0.5rem 0.75rem 0.75rem;
+    overflow-y: auto;
+    border: 1px solid var(--ink);
+    border-radius: 1.25rem;
+    background: rgb(255 255 255 / 0.94);
+    backdrop-filter: blur(24px) saturate(160%);
+    box-shadow: 0 24px 60px -24px rgb(10 10 10 / 0.35);
+    transform-origin: calc(100% - 2rem) 0;
+    opacity: 0;
+    transform: translateY(-0.75rem) scale(0.94);
+    transition:
+      opacity 300ms var(--ease-out),
+      transform 600ms var(--ease-out);
+  }
+
+  .sheet:popover-open .panel {
+    opacity: 1;
+    transform: none;
+  }
+
+  @starting-style {
+    .sheet:popover-open .panel {
+      opacity: 0;
+      transform: translateY(-0.75rem) scale(0.94);
+    }
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 3rem;
+    color: var(--ink-muted);
+  }
+
+  .panel ul {
+    margin: 0.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    border-top: 1px solid rgb(10 10 10 / 0.12);
+    opacity: 0;
+    transform: translateY(0.5rem);
+    transition:
+      opacity 300ms var(--ease-out),
+      transform 600ms var(--ease-out);
+  }
+
+  .sheet:popover-open .row {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(80ms + var(--i, 0) * 40ms);
+  }
+
+  @starting-style {
+    .sheet:popover-open .row {
+      opacity: 0;
+      transform: translateY(0.5rem);
+    }
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-height: 3.5rem;
+    padding: 0 0.25rem;
+    color: var(--ink);
+    font-size: 1.15rem;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .index {
+    width: 4ch;
+    color: var(--ink-muted);
+    font-size: 0.8rem;
+  }
+
+  .arrow {
+    margin-left: auto;
+    transition: transform 300ms var(--ease-out);
+  }
+
+  .link:active .arrow {
+    transform: translateX(4px);
+  }
+
+  :global(html):has(.sheet:popover-open) {
+    overflow: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel,
+    .row {
+      transform: none;
+      transition-property: opacity;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+/* Design tokens (source of truth: DESIGN.md). White paper, black ink, a terminal's voice. */
+:root {
+  --font-display: var(--font-mono);
+  --font-body: var(--font-mono);
+
+  --bg: #ffffff;
+  --bg-soft: #f4f4f2;
+  --ink: #0b0b0c;
+  --ink-muted: #6b6b70;
+  --ink-faint: #b9b9be;
+  --line: #0b0b0c;
+  /* A terminal green, used sparingly: the ASCII cup's hot spots, a "lit" state. */
+  --signal: #1f8a4c;
+  --accent: #0b0b0c;
+  --focus: #0b0b0c;
+  /* The marquee's info card: a cool lilac-to-sky gradient, as in the reference. */
+  --card-from: #d9d4f5;
+  --card-to: #b9dcef;
+
+  /* Dotted paper: one dot every --dot-x by --dot-y, fixed behind everything. */
+  --dot: #a8a8ae;
+  --dot-x: 132px;
+  --dot-y: 164px;
+
+  /* Kept for the project pages' photo hero. */
+  --night-bg: #0b0b0c;
+
+  --gutter: clamp(1rem, 3vw, 2rem);
+  /* The fixed header bar's height; sections leave this much room at their top. */
+  --header-h: 3.25rem;
+  --content-max: 90rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-hinge: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 180ms;
+  --dur-base: 420ms;
+  --dur-slow: 900ms;
+}

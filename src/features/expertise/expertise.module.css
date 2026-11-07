@@ -1,0 +1,191 @@
+/*
+ * The marquee: lines of huge type running sideways (transform only). Out of focus by default,
+ * except the first; under the pointer, the hovered line sharpens to ink and the others blur back.
+ */
+@layer components {
+  .expertise {
+    position: relative;
+    min-height: 100svh;
+    padding: calc(var(--header-h) + 2rem) 0 4rem;
+    overflow: hidden;
+  }
+
+  .index {
+    position: absolute;
+    top: calc(var(--header-h) + 2rem);
+    left: var(--gutter);
+    display: grid;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .index a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .labels {
+    display: grid;
+    width: fit-content;
+    margin-left: 25%;
+    text-transform: uppercase;
+  }
+
+  .labels span:nth-child(1) {
+    padding-left: 12ch;
+  }
+
+  .labels span:nth-child(3) {
+    padding-left: 10ch;
+  }
+
+  .rows {
+    margin: clamp(2rem, 8vh, 5rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    overflow: hidden;
+    font-size: clamp(3rem, 9.5vw, 10rem);
+    line-height: 1.08;
+    letter-spacing: -0.06em;
+    white-space: nowrap;
+  }
+
+  .link {
+    display: block;
+    color: #a3a3a8;
+    text-decoration: none;
+    filter: blur(5px);
+    transition:
+      filter 450ms var(--ease-out),
+      color 450ms var(--ease-out);
+  }
+
+  .row:first-child .link {
+    color: var(--ink);
+    filter: none;
+  }
+
+  /* Pointer over the rows: only the hovered line is sharp. */
+  @media (hover: hover) and (pointer: fine) {
+    .rows:hover .link {
+      color: #a3a3a8;
+      filter: blur(5px);
+    }
+
+    .rows .row:hover .link {
+      color: var(--ink);
+      filter: none;
+    }
+  }
+
+  .link:focus-visible {
+    color: var(--ink);
+    filter: none;
+    outline-offset: -4px;
+  }
+
+  .track {
+    display: inline-flex;
+    animation-name: run;
+    animation-duration: var(--speed);
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: var(--dir);
+  }
+
+  .track > span {
+    padding-right: 0.5em;
+  }
+
+  @keyframes run {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* The card that follows the pointer (transform written by expertise.tsx). */
+  .card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    width: min(30rem, 40vw);
+    padding: 1.1rem 1.25rem 1.4rem;
+    background: linear-gradient(135deg, var(--card-from), var(--card-to));
+    pointer-events: none;
+    opacity: 0;
+    scale: 0.96;
+    transition:
+      opacity 250ms var(--ease-out),
+      scale 350ms var(--ease-out);
+  }
+
+  .card[data-active] {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .cardBody {
+    display: none;
+  }
+
+  .card[data-active="0"] .cardBody[data-for="0"],
+  .card[data-active="1"] .cardBody[data-for="1"],
+  .card[data-active="2"] .cardBody[data-for="2"] {
+    display: block;
+  }
+
+  .cardTitle {
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid rgb(11 11 12 / 0.45);
+    font-weight: 700;
+  }
+
+  .cardBody ol {
+    display: grid;
+    gap: 1.1rem;
+    margin: 1.4rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cardBody li {
+    display: grid;
+    grid-template-columns: 4ch 1fr;
+  }
+
+  .cardBody li span {
+    font-weight: 700;
+  }
+
+  @media (max-width: 48rem) {
+    .labels {
+      margin-left: 22%;
+      font-size: 0.75rem;
+    }
+
+    .row {
+      font-size: clamp(2.6rem, 14vw, 4rem);
+    }
+
+    /* Touch: every line readable, no blur. */
+    .link {
+      color: var(--ink);
+      filter: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .track {
+      animation: none;
+    }
+  }
+}

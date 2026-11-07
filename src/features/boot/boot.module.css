@@ -1,0 +1,206 @@
+/*
+ * Boot loader timeline (ms, mirrored in lib/motion/tokens.ts → intro): lines type from 80 to
+ * ~1300; the counter runs 0 → 100 over 2300; status COMPILING at 1500, BUILD SUCCESSFUL at 2350;
+ * the sheet lifts at 2700 (550 ms). Typing is a stepped clip-path; the counter an animated
+ * integer (@property) printed through a three-digit counter style.
+ */
+@property --pct {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@counter-style pad3 {
+  system: extends decimal;
+  pad: 3 "0";
+}
+
+@layer components {
+  .boot {
+    display: none;
+  }
+
+  :global(html[data-intro="play"]) .boot {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: block;
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, var(--dot) 1.1px, transparent 1.6px);
+    background-size: var(--dot-x) var(--dot-y);
+    background-position: calc(var(--dot-x) / -2 + 32px) calc(var(--dot-y) / -2 + 20px);
+    color: var(--ink);
+    font-size: clamp(0.78rem, 1vw, 1rem);
+    line-height: 1.35;
+    text-transform: uppercase;
+    animation: lift 600ms var(--ease-in-out) 2700ms both;
+  }
+
+  /* While the loader is up, the page under it holds still. */
+  :global(html[data-intro="play"]) {
+    overflow: hidden;
+  }
+
+  .title,
+  .log,
+  .status {
+    position: absolute;
+    left: 34.5%;
+  }
+
+  .title {
+    top: 21%;
+  }
+
+  .log {
+    top: 39%;
+  }
+
+  .log p {
+    padding-left: var(--indent);
+  }
+
+  .status {
+    top: 61%;
+    display: flex;
+    gap: 2.5ch;
+    translate: -13ch 0;
+  }
+
+  /* Types itself in: revealed one character width at a time. */
+  .type {
+    display: inline-block;
+    white-space: pre;
+  }
+
+  /* Longhands: the CSS minifier drops an `animation` shorthand that contains var(). */
+  :global(html[data-intro="play"]) .type {
+    animation-name: type;
+    animation-duration: calc(var(--n) * 22ms);
+    animation-timing-function: steps(var(--n), end);
+    animation-delay: var(--at);
+    animation-fill-mode: both;
+  }
+
+  .count {
+    --pct: 0;
+    counter-reset: pct var(--pct);
+  }
+
+  .count::before {
+    content: "[" counter(pct, pad3) " \2014  100]";
+  }
+
+  :global(html[data-intro="play"]) .count {
+    animation: count 2300ms cubic-bezier(0.3, 0.1, 0.4, 1) 120ms both;
+  }
+
+  /* Three stacked states; each shows in its window. */
+  .states {
+    display: grid;
+    padding-left: 8ch;
+  }
+
+  .states > span {
+    grid-area: 1 / 1;
+    opacity: 0;
+  }
+
+  /* One clock for all three (2700 ms): each state visible only in its own window. */
+  :global(html[data-intro="play"]) .states > span {
+    animation-duration: 2700ms;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+  }
+
+  :global(html[data-intro="play"]) .states > span:nth-child(1) {
+    animation-name: state-1;
+  }
+
+  :global(html[data-intro="play"]) .states > span:nth-child(2) {
+    animation-name: state-2;
+  }
+
+  :global(html[data-intro="play"]) .states > span:nth-child(3) {
+    animation-name: state-3;
+  }
+
+  /* BOOTING 0–1500, COMPILING 1500–2350, BUILD SUCCESSFUL from 2350 (of 2700). */
+  @keyframes state-1 {
+    0%,
+    55.5% {
+      opacity: 1;
+    }
+    55.6%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes state-2 {
+    0%,
+    55.5% {
+      opacity: 0;
+    }
+    55.6%,
+    87% {
+      opacity: 1;
+    }
+    87.1%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes state-3 {
+    0%,
+    87% {
+      opacity: 0;
+    }
+    87.1%,
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes type {
+    from {
+      clip-path: inset(0 100% 0 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  @keyframes count {
+    to {
+      --pct: 100;
+    }
+  }
+
+
+  /* The sheet goes up like a terminal window scrolled away. */
+  @keyframes lift {
+    to {
+      transform: translateY(-100%);
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .title,
+    .log,
+    .status {
+      left: 12%;
+    }
+
+    .status {
+      translate: 0 0;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .log p {
+      padding-left: calc(var(--indent) * 0.4);
+    }
+  }
+}

@@ -1,0 +1,130 @@
+/*
+ * The statement screen: small terminal labels top left, the sentence large and centred, the
+ * ASCII cup rising from the bottom edge. Words rise in, staggered, as the boot loader lifts
+ * (their hidden state applies only while html[data-intro="play"]).
+ */
+@layer components {
+  .statement {
+    position: relative;
+    min-height: 100svh;
+    padding: calc(var(--header-h, 3.25rem) + clamp(1.5rem, 4vh, 3rem)) var(--gutter) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .labels {
+    position: absolute;
+    top: calc(var(--header-h, 3.25rem) + 1rem);
+    left: var(--gutter);
+    display: grid;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .labels span:nth-child(2) {
+    padding-left: 6ch;
+  }
+
+  .labels span:nth-child(3) {
+    padding-left: 12ch;
+    color: var(--ink-muted);
+  }
+
+  .sentence {
+    max-width: 52ch;
+    margin-top: clamp(1rem, 4vh, 2.5rem);
+    font-size: clamp(1.35rem, 2.75vw, 3.4rem);
+    font-weight: 400;
+    line-height: 1.22;
+    letter-spacing: -0.03em;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .word {
+    display: inline-block;
+    transition:
+      opacity 700ms var(--ease-out),
+      translate 900ms var(--ease-out);
+    transition-delay: calc(var(--w) * 22ms);
+  }
+
+  :global(html[data-intro="play"]) .word {
+    opacity: 0;
+    translate: 0 0.45em;
+  }
+
+  .keep {
+    white-space: nowrap;
+  }
+
+  /* The work, underlined: the line draws itself in after its words. */
+  .under {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 92%;
+    background-size: 100% 0.06em;
+    transition: background-size 900ms var(--ease-out) 700ms;
+  }
+
+  :global(html[data-intro="play"]) .under {
+    background-size: 0% 0.06em;
+  }
+
+  .cupBox {
+    position: relative;
+    width: min(92vw, 62rem);
+    flex: 1;
+    min-height: 46svh;
+    margin-top: clamp(1rem, 4vh, 3rem);
+  }
+
+  /* 72 × 34 cells; the box keeps it close to the cup's own proportions. */
+  .cup {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    translate: -50% 0;
+    width: min(100%, 64svh * 1.55);
+    aspect-ratio: 1.55;
+    font-family: var(--font-mono), monospace;
+  }
+
+  .file {
+    position: absolute;
+    right: 0;
+    bottom: 22%;
+    display: grid;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+  }
+
+  .file span {
+    padding-left: 4ch;
+    color: var(--ink-muted);
+    text-transform: none;
+  }
+
+  @media (max-width: 48rem) {
+    .labels {
+      display: none;
+    }
+
+    .file {
+      right: auto;
+      left: 0;
+      bottom: auto;
+      top: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .word,
+    .under {
+      transition: none;
+    }
+  }
+}

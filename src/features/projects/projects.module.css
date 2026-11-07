@@ -1,0 +1,244 @@
+/*
+ * The projects strip (osply.co layout, on white). A sticky stage in an n-screens-tall section;
+ * --f is the scroll position in cards (projects.tsx). For card i, d = i − f, ad = min(|d|, 1):
+ * the centre card is --wide and in colour; neighbours are cropped to --narrow and greyed,
+ * stacked edge to edge. Geometry vars (--h, --wide, --narrow, --gap) come from strip-geometry.
+ * With WebGL (data-gl) the canvas draws the photos (under the names); the HTML cards stay as links.
+ */
+@layer components {
+  .projects {
+    position: relative;
+    height: calc(var(--n) * 100svh);
+  }
+
+  .stage {
+    --f: 0;
+    --h: 34svh;
+    --wide: 51svh;
+    --narrow: 32svh;
+    --gap: 5px;
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .hairline {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: 50%;
+    height: 1px;
+    background: rgb(11 11 12 / 0.16);
+  }
+
+  /* Along the hairline: number, services | list of names, sector. */
+  .row {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: calc(50% + 0.9rem);
+    height: 6em;
+    font-size: clamp(0.85rem, 1.05vw, 1.15rem);
+    line-height: 1.3;
+  }
+
+  .row > span {
+    position: absolute;
+    top: 0;
+  }
+
+  /* A one-line window; the column inside slides one line per card. */
+  .ticker {
+    height: 1.3em;
+    overflow: hidden;
+  }
+
+  .ticker > span,
+  .names > span {
+    display: grid;
+    transform: translateY(calc(var(--f) * -1.3em));
+  }
+
+  .number {
+    left: 0;
+  }
+
+  .services {
+    left: 9%;
+  }
+
+  .names {
+    left: calc(50% + var(--wide) / 2 + 3vw);
+  }
+
+  /* The current name in ink, the others faint; those already passed fade out above. */
+  .names span span {
+    --d: calc(var(--i) - var(--f));
+    --ad: max(var(--d), var(--d) * -1);
+    color: color-mix(in srgb, var(--ink) calc(clamp(0, 1 - var(--ad) * 1.6, 1) * 100%), var(--ink-faint));
+    opacity: clamp(0, calc(1 + var(--d) * 2.5), 1);
+  }
+
+  .sector {
+    right: 0;
+    text-align: right;
+  }
+
+  .strip {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .card {
+    --d: calc(var(--i) - var(--f));
+    --ad: min(max(var(--d), var(--d) * -1), 1);
+    --crop: calc(var(--ad) * (var(--wide) - var(--narrow)) / 2);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: var(--wide);
+    height: var(--h);
+    translate: -50% -50%;
+    transform: translateY(calc(var(--d) * (var(--h) + var(--gap))));
+  }
+
+  .cardLink {
+    position: absolute;
+    inset: 0 var(--crop);
+    display: block;
+    overflow: hidden;
+    background: var(--bg-soft);
+  }
+
+  .cardLink:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 3px;
+  }
+
+  .photo {
+    object-fit: cover;
+    filter: grayscale(var(--ad));
+  }
+
+  /* With the WebGL strip on, it draws the photos; the links stay to be clicked. */
+  .stage[data-gl] .photo {
+    opacity: 0;
+  }
+
+  .stage[data-gl] .cardLink {
+    background: transparent;
+  }
+
+  .gl {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .stage[data-gl] .gl {
+    z-index: 1;
+  }
+
+  /* The current project's name: small, lower case, at the foot of its photo, on hover. */
+  .cardName {
+    position: absolute;
+    left: 50%;
+    bottom: 1.1rem;
+    z-index: 3;
+    translate: -50% 0.4rem;
+    color: #fff;
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: clamp(0.85rem, 0.95vw, 1rem);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    text-transform: lowercase;
+    text-shadow: 0 1px 10px rgb(0 0 0 / 0.45);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition:
+      opacity 300ms var(--ease-out),
+      translate 400ms var(--ease-out);
+  }
+
+  /* Only the centre card shows its name, while the pointer is on it (or it has focus). */
+  .card:has(.cardLink:hover, .cardLink:focus-visible) .cardName {
+    opacity: clamp(0, calc(1 - var(--ad) * 3), 1);
+    translate: -50% 0;
+  }
+
+  @media (hover: none) {
+    .cardName {
+      opacity: clamp(0, calc(1 - var(--ad) * 3), 1);
+      translate: -50% 0;
+    }
+  }
+
+  .stage[data-gl] .card {
+    z-index: 2;
+  }
+
+  .tagline {
+    position: absolute;
+    left: 50%;
+    bottom: 9%;
+    z-index: 3;
+    translate: -50% 0;
+    font-size: clamp(0.8rem, 0.95vw, 1rem);
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    text-align: center;
+    text-transform: uppercase;
+    /* A white terminal label: readable over whatever photo it crosses. */
+    width: fit-content;
+    max-width: min(44ch, 90vw);
+    padding: 0.55em 0.9em;
+    border: 1px solid var(--ink);
+    background: var(--bg);
+  }
+
+  .footLeft,
+  .footRight {
+    position: absolute;
+    bottom: 1.25rem;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+  }
+
+  .footLeft {
+    left: var(--gutter);
+  }
+
+  .footRight {
+    right: var(--gutter);
+  }
+
+  @media (max-width: 48rem) {
+    .services,
+    .sector,
+    .footRight {
+      display: none;
+    }
+
+    .names {
+      left: auto;
+      right: 0;
+      text-align: right;
+    }
+
+    .row {
+      top: calc(50% + var(--h) / 2 + 1rem);
+    }
+
+    .tagline {
+      bottom: 4.5rem;
+    }
+  }
+}

@@ -1,0 +1,62 @@
+@layer components {
+  .about {
+    display: grid;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    max-width: 76rem;
+    margin: 0 auto;
+    padding: calc(var(--header-h) + clamp(3rem, 8vw, 6rem)) var(--gutter) 2rem;
+  }
+
+  .log {
+    display: grid;
+    text-transform: uppercase;
+  }
+
+  .log span:nth-child(2) {
+    padding-left: 6ch;
+    color: var(--ink-muted);
+  }
+
+  .title {
+    max-width: 30ch;
+    font-size: clamp(1.8rem, 4vw, 4rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.05em;
+  }
+
+  .lead {
+    max-width: 60ch;
+    color: var(--ink-muted);
+  }
+
+  /* The info card from the marquee, here as a fixed panel. */
+  .box {
+    width: min(100%, 30rem);
+    padding: 1.1rem 1.25rem 1.4rem;
+    background: linear-gradient(135deg, var(--card-from), var(--card-to));
+  }
+
+  .boxTitle {
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid rgb(11 11 12 / 0.45);
+    font-weight: 700;
+  }
+
+  .box ol {
+    display: grid;
+    gap: 0.8rem;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .box li {
+    display: grid;
+    grid-template-columns: 4ch 1fr;
+  }
+
+  .box li span {
+    font-weight: 700;
+  }
+}

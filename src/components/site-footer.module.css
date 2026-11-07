@@ -1,0 +1,70 @@
+@layer components {
+  .footer {
+    padding: clamp(5rem, 12vw, 9rem) var(--gutter) max(1.5rem, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--ink);
+    margin: 0 var(--gutter);
+    padding-left: 0;
+    padding-right: 0;
+    text-transform: uppercase;
+  }
+
+  .log {
+    display: grid;
+    margin-left: 25%;
+  }
+
+  .log span:nth-child(2) {
+    padding-left: 6ch;
+  }
+
+  .log span:nth-child(3) {
+    padding-left: 12ch;
+    color: var(--ink-muted);
+  }
+
+  .name {
+    margin-top: clamp(2rem, 6vw, 4rem);
+    font-size: clamp(4rem, 19vw, 19rem);
+    line-height: 0.9;
+    letter-spacing: -0.09em;
+    text-transform: none;
+  }
+
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ink);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: inherit;
+    text-underline-offset: 0.25em;
+  }
+
+  .copy {
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 48rem) {
+    .log {
+      margin-left: 0;
+    }
+  }
+}

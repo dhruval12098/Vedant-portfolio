@@ -1,0 +1,259 @@
+/*
+ * A project page: full-screen photo hero (where the tissue sheet lands), then the case study on
+ * white dotted paper, in the terminal voice: an info box, numbered chapters, a checklist.
+ */
+@layer components {
+  .page {
+    color: var(--ink);
+  }
+
+  .hero {
+    position: relative;
+    height: 100svh;
+    overflow: hidden;
+    background: var(--night-bg);
+    color: #fff;
+  }
+
+  .photo {
+    object-fit: cover;
+  }
+
+  .shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.3) 0%, rgb(0 0 0 / 0) 28%, rgb(0 0 0 / 0) 52%, rgb(0 0 0 / 0.68) 100%);
+  }
+
+  .heroText {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: max(2.5rem, env(safe-area-inset-bottom));
+  }
+
+  .kind {
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.85);
+  }
+
+  .title {
+    margin-top: 0.5rem;
+    font-weight: 400;
+    font-size: clamp(2.6rem, 8vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.07em;
+  }
+
+  .back {
+    position: absolute;
+    top: calc(var(--header-h) + 1rem);
+    left: var(--gutter);
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 1.1rem;
+    border: 1px solid rgb(255 255 255 / 0.6);
+    border-radius: 999px;
+    background: rgb(0 0 0 / 0.35);
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+
+  .back:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  .body {
+    display: grid;
+    gap: clamp(3rem, 7vw, 6rem);
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: clamp(4rem, 9vw, 7rem) var(--gutter) clamp(5rem, 10vw, 8rem);
+  }
+
+  .intro {
+    max-width: 34ch;
+    font-size: clamp(1.4rem, 2.8vw, 2.6rem);
+    line-height: 1.25;
+    letter-spacing: -0.04em;
+  }
+
+  /* The facts, as the marquee's info card. */
+  .facts dl {
+    margin: 0;
+  }
+
+  .facts {
+    width: min(100%, 34rem);
+    padding: 1.1rem 1.25rem 1.3rem;
+    background: linear-gradient(135deg, var(--card-from), var(--card-to));
+  }
+
+  .factsTitle {
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid rgb(11 11 12 / 0.45);
+    font-weight: 700;
+  }
+
+  .facts div {
+    display: grid;
+    grid-template-columns: 11ch 1fr;
+    gap: 1rem;
+    padding-top: 0.8rem;
+  }
+
+  .facts dt {
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .facts dd {
+    margin: 0;
+  }
+
+  .shot {
+    position: relative;
+    display: block;
+    aspect-ratio: var(--ratio);
+    overflow: hidden;
+    background: var(--bg-soft);
+  }
+
+  .shot img {
+    object-fit: cover;
+  }
+
+  .body figure {
+    margin: 0;
+  }
+
+  .body figcaption {
+    margin-top: 0.9rem;
+    color: var(--ink-muted);
+  }
+
+  .body figcaption::before {
+    content: "// ";
+  }
+
+  /* App screens: a row; a swipeable strip on phones. */
+  .screenRow {
+    display: grid;
+    grid-auto-columns: minmax(10rem, 1fr);
+    grid-auto-flow: column;
+    gap: clamp(0.75rem, 1.6vw, 1.5rem);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+  }
+
+  .screenRow .shot {
+    scroll-snap-align: start;
+    border: 1px solid rgb(11 11 12 / 0.15);
+    border-radius: 1rem;
+  }
+
+  .pair > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(0.75rem, 1.6vw, 1.5rem);
+  }
+
+  .chapter {
+    display: grid;
+    grid-template-columns: 6ch 1fr;
+    gap: 1rem;
+    max-width: 52rem;
+  }
+
+  .chapterNo {
+    color: var(--ink-muted);
+  }
+
+  .chapter h2,
+  .checks h2 {
+    font-size: 1em;
+    font-weight: 700;
+  }
+
+  .chapter p:last-child {
+    margin-top: 0.8rem;
+    font-size: clamp(1.05rem, 1.6vw, 1.45rem);
+    line-height: 1.5;
+    letter-spacing: -0.02em;
+  }
+
+  /* A terminal box: what was built and how it was tested. */
+  .checks {
+    max-width: 52rem;
+    padding: 1.1rem 1.25rem 1.4rem;
+    border: 1px solid var(--ink);
+    background: var(--bg);
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+
+  .checks h2 {
+    padding-bottom: 0.7rem;
+    border-bottom: 1px solid rgb(11 11 12 / 0.35);
+  }
+
+  .checks ol {
+    display: grid;
+    gap: 0.9rem;
+    margin: 1.2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .checks li {
+    display: grid;
+    grid-template-columns: 4ch 1fr;
+  }
+
+  .checks li span {
+    font-weight: 700;
+  }
+
+  .next {
+    display: grid;
+    gap: 0.6rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--ink);
+    color: inherit;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .nextName {
+    font-size: clamp(2rem, 6vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.07em;
+    text-transform: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .next:hover .nextName {
+      text-decoration: underline;
+      text-decoration-thickness: 0.05em;
+      text-underline-offset: 0.12em;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    .screenRow {
+      grid-auto-columns: 62vw;
+    }
+
+    .pair > div {
+      grid-template-columns: 1fr;
+    }
+
+    .chapter {
+      grid-template-columns: 1fr;
+    }
+  }
+}
