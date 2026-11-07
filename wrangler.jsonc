@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "vedant-portfolio",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-11-07",
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "images": {
+    "binding": "IMAGES"
+  },
+  "routes": [
+    {
+      "pattern": "vedantportfolio.drimindesigns.co.in",
+      "custom_domain": true
+    }
+  ],
+  "workers_dev": true,
+  "preview_urls": true,
+  "observability": {
+    "enabled": true
+  }
+}
